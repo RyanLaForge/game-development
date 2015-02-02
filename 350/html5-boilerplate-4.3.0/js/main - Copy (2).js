@@ -37,7 +37,6 @@ function initialize() {
   var currentPositionMarker;
  var updateLocation = function(position)
 {
-
 	var latitude = position.coords.latitude.toFixed(14);
 	var longitude = position.coords.longitude.toFixed(14);
 	currentPosition = new google.maps.LatLng(latitude,longitude);
@@ -72,8 +71,10 @@ var watchID = navigator.geolocation.watchPosition(updateLocation);
 
 
  
-    }, handleError)}
- else {
+    }, function() {
+      handleNoGeolocation(true);
+    });
+  } else {
     // Browser doesn't support Geolocation
     handleNoGeolocation(false);
   }
@@ -83,25 +84,6 @@ var watchID = navigator.geolocation.watchPosition(updateLocation);
   directionsDisplay.setMap(map);
   
 }
-
-function handleError()
-{
-	switch(error.code) {
-        case error.PERMISSION_DENIED:
-            alert("Geolocation failed. User denied the request for Geolocation.");
-            break;
-        case error.POSITION_UNAVAILABLE:
-            alert("Location information is unavailable.");
-            break;
-        case error.TIMEOUT:
-            alert("The request to get user location timed out.");
-            break;
-        case error.UNKNOWN_ERROR:
-			alert("An unknown error occurred.");
-            break;
-    }
-}
-
 
 /* Handles any error associated with geocoding.*/
 function handleNoGeolocation(errorFlag) {
