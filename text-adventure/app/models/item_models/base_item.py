@@ -23,3 +23,12 @@ class Item():
 
     def can_be_picked_up(self):
         return self.carryable
+
+    def use(self, *args, **kwargs):
+        if not self.usable:
+            raise ValueError("This item is not useable.")
+        self.action()
+
+    @property
+    def usable(self):
+        return self.action != None
