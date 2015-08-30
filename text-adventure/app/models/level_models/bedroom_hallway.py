@@ -9,28 +9,7 @@ class BedroomHallway(LevelModel):
             dripping sound seems to be coming from there.
                 """
         self._name = 'bedroom_hallway'
-
-
-    @property
-    def connections(self):
-        return self._connections
-
-    @connections.setter
-    def connections(self, value):
-        if value is None:
-            value = []
-        elif not isinstance(value, list):
-            value = [value]
-        self._connections = value
-
-
-    @property
-    def name(self):
-        return self._name
-
-    @property
-    def description(self):
-        return self._description
+        self.visited = 0
 
     def describe_level_string(self):
         string = self.description
@@ -39,5 +18,3 @@ class BedroomHallway(LevelModel):
             string = string + connection.name + " "
         return string
 
-    def has_connection(self, connection):
-        return connection in self.connections

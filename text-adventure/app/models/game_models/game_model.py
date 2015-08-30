@@ -1,7 +1,7 @@
 __author__ = 'Ryan'
-from LevelModel.bedroom import Bedroom
-from LevelModel.bedroom_hallway import BedroomHallway
-from LevelModel.bathroom import Bathroom
+from app.models.level_models.bedroom import Bedroom
+from app.models.level_models.bedroom_hallway import BedroomHallway
+from app.models.level_models.bathroom import Bathroom
 
 class GameModel(object):
 
@@ -16,6 +16,7 @@ class GameModel(object):
     levels = {bedroom, bedroom_hallway, bathroom}
 
     current_level = bedroom
+    current_level.visited+=1
 
     def has_connection(self, connection_name):
         if self.current_level.has_connection(self.get_level_by_name(connection_name)):
@@ -26,6 +27,7 @@ class GameModel(object):
         if self.has_connection(connection_name):
             connection = self.get_level_by_name(connection_name)
             self.current_level = connection
+            connection.visited+=1
         else:
             raise ValueError("The current level %s is not connected to level %s" % (self.current_level.name, connection_name))
 
@@ -39,3 +41,4 @@ class GameModel(object):
         for level in self.levels:
             if level.name == name:
                 return level
+
