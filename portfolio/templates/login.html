@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ryan's-Portfolio-Welcome-Page</title>
+</head>
+<body>
+    <div class="page-title">
+        <p><b>Welcome To The Portfolio Of Ryan La Forge!</b></p>
+    </div>
+    <p>Please sign in, so I know who you are ;)</p>
+
+    <form class="login-form" method="POST" action="/portfolio/login">
+        <p class="'form-error'">{{form_error}}</p>
+        <div>
+            <label>
+                Username: <input type="text" name="username" value="{{username}}" placeholder="username or email."><p class="form-error">{{username_error}}</p>
+            </label>
+        </div>
+        <div>
+            <label>
+                Password: <input type="password" name="password"> <p class="form-error">{{password_error}}</p>
+            </label>
+        </div>
+        <div>
+            <label>
+                Verify Password: <input type="password" name="verify-password">
+            </label>
+        </div>
+        <input type="submit">
+    </form>
+    <button class="google-plus">Login using Google+</button>
+    <br>
+    <button class="facebook">Login using Facebook</button>
+</body>
+</html>
