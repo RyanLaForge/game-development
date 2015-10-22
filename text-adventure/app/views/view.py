@@ -48,12 +48,14 @@ class GameView():
             self.travel_to_level(input[3:])
         elif input.startswith('inventory'):
             input = input[10:]
-            if input.startswith('examine'):
+            if input.startswith('-examine'):
                 self.examine_item(input[8:])
-            elif input.startswith('use'):
+            elif input.startswith('-use'):
                 self.use_item(input[4:])
-            elif input.startswith('list'):
+            elif input.startswith('-list'):
                 self.display_inventory_list()
+            else:
+                self.display_user_error("Invalid inventory command")
         elif input == 'quit' or input == 'q':
             self.exit_application()
         else:
