@@ -1,0 +1,9 @@
+body {
+    background-color: cyan;
+}
+
+#primary-section {
+ display: inline-block;
+ background-color: blue;
+ height: 150%;
+}
