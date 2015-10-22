@@ -3,6 +3,7 @@ __author__ = 'Ryan'
 from app.models.game_models.game_model import GameModel
 from app.models.inventory import inventory_items
 
+
 class GameView():
     def __init__(self, game_model):
         self.help_instructions = """
@@ -26,7 +27,7 @@ class GameView():
         """Collects the user input, cleans it, and parses the command to understand it."""
         input = raw_input("Input your command here: ")
         clean_input = self.clean_user_input(input)
-        self.parse_user_input(input)
+        self.parse_user_input(clean_input)
 
 
     def clean_user_input(self, input):
@@ -39,27 +40,66 @@ class GameView():
     def parse_user_input(self, input):
         """Parse the user input and initiate the command according to the help menu.
         :precon: The input should be cleaned. (lowercase and whitespaces stripped"""
-        if input == 'help' or input == 'h':
-            self.display_help_instructions()
-        elif input.startswith('help'):
-            if input[4:].strip() == '-inventory':
-                self.display_inventory_help()
-        elif input.startswith('go '):
-            self.travel_to_level(input[3:])
+        if 'help' in input:
+            self.handle_user_help_options(input)
+        elif input.startswith('go'):
+            self.handle_go_command(input)
         elif input.startswith('inventory'):
-            input = input[10:]
-            if input.startswith('-examine'):
-                self.examine_item(input[8:])
-            elif input.startswith('-use'):
-                self.use_item(input[4:])
-            elif input.startswith('-list'):
-                self.display_inventory_list()
-            else:
-                self.display_user_error("Invalid inventory command")
+            self.handle_inventory_command(input)
         elif input == 'quit' or input == 'q':
             self.exit_application()
         else:
-            self.display_user_error("Did not understand that command.")
+            self.display_user_error("Did not understand that command. You entered: %s" % input)
+
+    def handle_inventory_command(self, input):
+        input = input[10:]
+        if input.startswith('-examine'):
+            self.examine_item(input[8:])
+        elif input.startswith('-use'):
+            self.use_item(input[4:])
+        elif input.startswith('-list'):
+            self.display_inventory_list()
+        else:
+            self.display_user_error("Invalid inventory command. you entered: %s" % ("inventory %s" % input))
+            self.display_inventory_help()
+
+    def handle_go_command(self, input):
+        input = input[3:]
+        if len(input) == 0:
+            self.display_user_error("Invalid go command. You entered: %s" % ("go %s" % input))
+            self.display_go_command_help()
+        else:
+            self.travel_to_level(input)
+
+    def handle_user_help_options(self, input):
+        if 'inventory' in input:
+            if 'examine' in input:
+                self.display_inventory_examine_help()
+            elif 'use' in input:
+                self.display_inventory_use_help()
+            else:
+                self.display_inventory_help()
+        else:
+            if len(input[4:]) != 0:
+                self.display_invalid_help_command(input)
+            self.display_help_instructions()
+        if 'go' in input:
+            self.display_go_command_help()
+
+    def display_invalid_help_command(self, input):
+        """Explain that the help command was invalid """
+        print "You gave an invalid help command. The command you typed was: %s" % input
+    def display_go_command_help(self):
+        """Explain the go command"""
+        print "The \'go\' command moves you to another location. use \'go {{room}}\' to move to a different room."
+
+    def display_inventory_use_help(self):
+        """Explain inventory use command"""
+        print "Use this command to use an item in your inventory \'inventory -use {{item}}\'"
+
+    def display_inventory_examine_help(self):
+        """Explain inventory help"""
+        print "The examine command examines the given item. To properly use it type \'inventory -examine {{item}}\'"
 
     def display_help_instructions(self):
         """Display the help instructions to the user"""
@@ -93,6 +133,7 @@ class GameView():
         print self.inventory_help_text
 
     def examine_item(self, item_name):
+        item_name = item_name.strip()
         item = inventory_items.get(item_name)
         if not item:
             self.display_user_error('There is no such item %s in the inventory.' % item_name)
